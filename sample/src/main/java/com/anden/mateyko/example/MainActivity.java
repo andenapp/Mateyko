@@ -33,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new Mateyko(MainActivity.this)
-                .setView(item)
-                .setBackground(R.drawable.background)
-                .setTarget(target)
-                .show();
+        Mateyko mateyko = new Mateyko.Builder(MainActivity.this)
+                .setTarget(item)
+                .build();
+
+        mateyko.show();
     }
 }

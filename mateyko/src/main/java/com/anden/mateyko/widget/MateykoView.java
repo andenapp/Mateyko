@@ -1,4 +1,4 @@
-package com.anden.mateyko;
+package com.anden.mateyko.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,6 +17,8 @@ import android.support.v4.view.ViewCompat;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
+
+import com.anden.mateyko.internal.Step;
 
 /**
  * Created by ignacio on 19/07/17.
@@ -120,7 +122,7 @@ public class MateykoView extends FrameLayout {
             float f = Math.max(0, Math.min(1, elapsedTime / (float) FOCUS_DURATION));
 
             float radius = f * step.getRadius();
-            eraseCanvas.drawCircle(step.getStart().x, step.getStart().y, radius, clearPaint);
+            eraseCanvas.drawCircle(step.getTargetCenter().x, step.getTargetCenter().y, radius, clearPaint);
         }else if(elapsedTime > FOCUS_DURATION && elapsedTime - FOCUS_DURATION < RING_DURATION){
 
             float f = Math.max(0, Math.min(1, (elapsedTime - FOCUS_DURATION) / (float) RING_DURATION));
@@ -128,7 +130,7 @@ public class MateykoView extends FrameLayout {
             step.getFirstRing().draw(f, eraseCanvas, firstRingPaint);
 
 
-            eraseCanvas.drawCircle(step.getStart().x, step.getStart().y, step.getRadius(), clearPaint);
+            eraseCanvas.drawCircle(step.getTargetCenter().x, step.getTargetCenter().y, step.getRadius(), clearPaint);
         }else{
             float f = Math.max(0, Math.min(1, (elapsedTime - (FOCUS_DURATION + RING_DURATION)) / (float) RING_DURATION));
 
@@ -136,7 +138,7 @@ public class MateykoView extends FrameLayout {
 
             step.getFirstRing().draw(1, eraseCanvas, firstRingPaint);
 
-            eraseCanvas.drawCircle(step.getStart().x, step.getStart().y, step.getRadius(), clearPaint);
+            eraseCanvas.drawCircle(step.getTargetCenter().x, step.getTargetCenter().y, step.getRadius(), clearPaint);
         }
 
         if(elapsedTime < (FOCUS_DURATION + RING_DURATION * 2)) {

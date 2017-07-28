@@ -1,4 +1,4 @@
-package com.anden.mateyko;
+package com.anden.mateyko.graphics;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

@@ -1,14 +1,17 @@
-package com.anden.mateyko;
+package com.anden.mateyko.internal;
 
 import android.graphics.PointF;
 
+import com.anden.mateyko.graphics.Ring;
+
 /**
- * Created by ignacio on 19/07/17.
+ * Handle info for target point
  */
 
 public class Step {
 
-    private PointF start;
+    /*Target point center*/
+    private PointF targetCenter;
 
     private Ring firstRing;
     private Ring secondRing;
@@ -16,18 +19,18 @@ public class Step {
     private float radius;
 
     public Step(PointF start, float radius){
-        this.start = start;
+        this.targetCenter = start;
         this.radius = radius;
         init();
     }
 
     private void init(){
-        firstRing = new Ring(start, radius, radius * 1.2f);
-        secondRing = new Ring(start, radius * 1.2f, radius * 1.6f);
+        firstRing = new Ring(targetCenter, radius, radius * 1.2f);
+        secondRing = new Ring(targetCenter, radius * 1.2f, radius * 1.6f);
     }
 
-    public PointF getStart() {
-        return start;
+    public PointF getTargetCenter() {
+        return targetCenter;
     }
 
     public float getRadius() {
