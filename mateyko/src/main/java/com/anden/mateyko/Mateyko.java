@@ -3,10 +3,13 @@ package com.anden.mateyko;
 import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.graphics.PointF;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.anden.mateyko.internal.OneStepAdapter;
 import com.anden.mateyko.internal.Step;
+import com.anden.mateyko.internal.StepAdapter;
 import com.anden.mateyko.widget.MateykoView;
 
 /**
@@ -19,6 +22,8 @@ public class Mateyko implements MateykoView.OnDissmisListener{
 
     private MateykoView frame;
 
+    private StepAdapter adapter;
+
     private Mateyko(Activity activity){
         this.activity = activity;
         this.frame = new MateykoView(activity);
@@ -30,10 +35,12 @@ public class Mateyko implements MateykoView.OnDissmisListener{
         return this;
     }
 
-    public Mateyko setBackground(int resourceId){
+    public void setBackground(int resourceId){
         frame.setBackground(resourceId);
+    }
 
-        return this;
+    private void setStepAdapter(StepAdapter adapter){
+        frame.setAdapter(adapter);
     }
 
     public void setTarget(View target){
@@ -75,6 +82,10 @@ public class Mateyko implements MateykoView.OnDissmisListener{
 
         private View target;
 
+        private int resourceId = 0;
+
+        private OneStepAdapter adapter;
+
         public Builder(Activity activity){
             this.activity = activity;
         }
@@ -84,9 +95,22 @@ public class Mateyko implements MateykoView.OnDissmisListener{
             return this;
         }
 
+        public Builder setBackground(int resourceId){
+            this.resourceId = resourceId;
+
+            return this;
+        }
+
+        public Builder setView(int layoutResourceId, int nextResourceId){
+            this.adapter = new OneStepAdapter(layoutResourceId, nextResourceId);
+            return this;
+        }
+
         public Mateyko build(){
             Mateyko mateyko = new Mateyko(activity);
             mateyko.setTarget(target);
+            mateyko.setStepAdapter(adapter);
+            mateyko.setBackground(resourceId);
 
             return mateyko;
         }

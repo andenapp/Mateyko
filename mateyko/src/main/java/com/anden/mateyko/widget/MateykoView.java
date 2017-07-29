@@ -16,9 +16,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.anden.mateyko.internal.Step;
+import com.anden.mateyko.internal.StepAdapter;
+import com.anden.mateyko.internal.StepObserver;
 
 /**
  * Created by ignacio on 19/07/17.
@@ -45,7 +49,10 @@ public class MateykoView extends FrameLayout {
 
     private long elapsedTime;
 
+    private StepObserver stepObserver;
+
     private OnDissmisListener callback;
+    private StepAdapter adapter;
 
     public interface OnDissmisListener{
         void onDismiss(MateykoView view);
@@ -104,6 +111,48 @@ public class MateykoView extends FrameLayout {
     }
 
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+
+        if (adapter == null) {
+            return;
+        }
+
+        if (getChildCount() == 0) {
+            addAndMeasureChild(adapter.getStepView(this, 0));
+        }
+
+        positionItems();
+    }
+
+    private void addAndMeasureChild(View child) {
+        ViewGroup.LayoutParams params = child.getLayoutParams();
+        if (params == null) {
+            params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        }
+        addViewInLayout(child, -1, params, true);
+
+        int itemWidth = getWidth();
+        int itemHeight = getHeight();
+        child.measure(MeasureSpec.EXACTLY | itemWidth, MeasureSpec.EXACTLY | itemHeight);
+    }
+
+    private void positionItems() {
+        int top = 0;
+
+        for (int index = 0; index < getChildCount(); index++) {
+            View child = getChildAt(index);
+
+            int width = child.getMeasuredWidth();
+            int height = child.getMeasuredHeight();
+            int left = (getWidth() - width) / 2;
+
+            child.layout(left, top, left + width, top + height);
+            top += height;
+        }
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
@@ -147,6 +196,15 @@ public class MateykoView extends FrameLayout {
         }
 
         canvas.drawBitmap(eraseBitmap, 0, 0, null);
+    }
+
+    public void setAdapter(StepAdapter adapter) {
+        this.adapter = adapter;
+
+        if(this.adapter != null){
+            stepObserver = new AdapterStepObserver();
+            adapter.registerObserver(stepObserver);
+        }
     }
 
     @Override
@@ -195,5 +253,14 @@ public class MateykoView extends FrameLayout {
 
     public void setOnDissmisListener(OnDissmisListener callback) {
         this.callback = callback;
+    }
+
+    private class AdapterStepObserver extends StepObserver{
+
+        @Override
+        public void onNext() {
+            super.onNext();
+            dismiss();
+        }
     }
 }

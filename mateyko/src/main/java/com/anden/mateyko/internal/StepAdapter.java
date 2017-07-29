@@ -11,4 +11,6 @@ import com.anden.mateyko.widget.MateykoView;
 public interface StepAdapter {
     View getStepView(MateykoView parent, int position);
     int getStepCount();
+    void registerObserver(StepObserver observer);
+    void unregisterObserver(StepObserver observer);
 }

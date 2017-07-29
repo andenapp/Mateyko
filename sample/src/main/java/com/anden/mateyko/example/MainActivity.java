@@ -24,17 +24,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showGuide(View target){
-        View item = LayoutInflater.from(MainActivity.this).inflate(R.layout.mateyco_guide_layout, null, false);
-
-        item.findViewById(R.id.test_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Test toast", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         Mateyko mateyko = new Mateyko.Builder(MainActivity.this)
-                .setTarget(item)
+                .setView(R.layout.mateyco_guide_layout, R.id.test_button)
+                .setBackground(R.drawable.background)
+                .setTarget(target)
                 .build();
 
         mateyko.show();
